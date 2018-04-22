@@ -38,7 +38,7 @@ Since we'd like to visualize where our RNA-seq reads are falling in the genome, 
 
 The BAM files containing alignments can be found in the `week4` directory (`*_chr5.bam`).
 
-Unforunately, your labmate forgot to write down some details about how they performed the alignment. In particularly, we'd like to know:
+Unforunately, your labmate forgot to write down some details about how they performed the alignment. Particularly, we'd like to know:
 
 * What program and command did he or she use to align the reads?
 * What reference genome were the sequences aligned to?
@@ -73,7 +73,17 @@ You can run the script by:
 This may take a while to run (~20 minutes). While you are waiting, move on to part 3 to visualize the RNA-seq data, which can be done independently of the `kallisto` run.
 
 <blockquote>
-**UNIX TIP**: TODO more on running bash scripts + executable permissions. maybe someone wants to fill this in :)
+**UNIX TIP**: TODO more on running bash scripts + executable permissions
+  To create a bash script, you open your file with either vi or emacs and place
+```
+  #!/bin/bash 
+ ```
+at the top of the file.
+In the next line, you write your script and when you are done, save the file. You then need to need to make your file executable. To do so, you change the permissions on the file by typing at the command promt 
+ ```
+$ chmod u+x Yourfilename  (add path dpepending on where you are)
+  ```
+To execute the script from the current directory, you can run ./sYourfilenameand pass any parameters if needed.
 </blockquote>
 
 ## 3. Visualizing data using a genome-browser
