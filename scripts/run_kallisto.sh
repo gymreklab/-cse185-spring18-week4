@@ -8,7 +8,7 @@ KINDEX=${PUBLIC}/mm10_kallisto
 # Do a separate kallisto run for each dataset
 for prefix in FL_Rep1 FL_Rep2 HL_Rep1 HL_Rep2 MB_Rep1 MB_Rep2
 do
-    mkdir -p $prefix
+    mkdir -p ~/week4/${prefix}
     # TODO edit kallisto command to use 100 bootstrap rounds
     kallisto quant -t 3 \
 	-o $prefix --gtf $GTF -i $KINDEX \

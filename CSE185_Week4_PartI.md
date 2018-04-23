@@ -20,9 +20,9 @@ git clone https://github.com/cse185-sp18/cse185-week4-<username>.git week4
 
 Data for this week can be found in the `public/week4` directory. Among other things, you can find fastq files for our RNA-sequencing experiments there:
 
-* Forelimb: `FL_Rep1_chr5_*.fq.gz`, `FL_Rep2_chr5_1.fq.gz` 
-* Hindlimb: `HL_Rep1_chr5_*.fq.gz`, `HL_Rep2_chr5_1.fq.gz` 
-* Midbrain: `MB_Rep1_chr5_*.fq.gz`, `MB_Rep2_chr5_1.fq.gz` 
+* Forelimb: `FL_Rep1_chr5_*.fq.gz`, `FL_Rep2_chr5_*.fq.gz` 
+* Hindlimb: `HL_Rep1_chr5_*.fq.gz`, `HL_Rep2_chr5_*.fq.gz` 
+* Midbrain: `MB_Rep1_chr5_*.fq.gz`, `MB_Rep2_chr5_*.fq.gz` 
 
 (Note: these reads have been downsampled from the original experiment to only contain chromosome 5)
 
@@ -53,7 +53,7 @@ You wonder if the BAM header files might have some more information about how th
 ```
 samtools view
 ```
-to learn how to output the header of a BAM file. Take a look at the [SAM specification](https://samtools.github.io/hts-specs/SAMv1.pdf) to see a description of different standard header tags (top of page 5). Note the "@PG" tag gives info about the program that was used, and many tools (including the one used here) will use that tag to document the exact command used to generate the BAM file.
+to learn how to output the header of a BAM file. Take a look at the [SAM specification](https://samtools.github.io/hts-specs/SAMv1.pdf) to see a description of different standard header tags (top of page 4). Note the "@PG" tag gives info about the program that was used, and many tools (including the one used here) will use that tag to document the exact command used to generate the BAM file.
 
 Take a look at reads, for instance by doing `samtools view FL_Rep1_chr5.bam`. If you scroll down, you'll notice the CIGAR scores have some extra characters in them we haven't seen before (See week 1 slides for a refresher on CIGAR scores). In the past, we have seen "M" for match, "I" for insertion, and "D" for deletion. Now we see many reads have "N" in the CIGAR scores (e.g. read ID SRR3950230.31710737). In the SAM specification, go to page 6 to read more about CIGAR scores and find out what "N" represents. What biological feature do you think the "N"'s stand for?
 
@@ -61,7 +61,7 @@ Take a look at reads, for instance by doing `samtools view FL_Rep1_chr5.bam`. If
 **UNIX TIP**: `less` is really helpful for looking at and scrolling through files. A helpful way to visualize a sam file is to run `samtools view file.bam | less -S`. The `-S` parameter tells the terminal not to wrap lines, and instead allow you to scroll through long lines horizontally. This makes files with long lines much more readable. Another trick: once you're looking at a file using `less`, you can use `ctrl-v` to scroll down more quickly than using the down button.
 </blockquote>
 
-## 2. Quantifying gene expressiom
+## 3. Quantifying gene expressiom
 
 We'll first want to use the RNA-sequencing data to quantify expression of each gene. For this, we'll use a tool called `kallisto` (https://pachterlab.github.io/kallisto/). This is an extremely fast method to quantify transcript abundance. It's main speedup over competing methods is to avoid the alignment step altogether and use a much simpler kmer counting approach based on our old friend from last week: the De Brujn graph! Kallisto will take in our fastq files and output estimated "transcripts per million reads" (TPM) values for each transcript.
 
@@ -76,15 +76,23 @@ You can run the script by:
 ~/week4/scripts/run_kallisto.sh 
 ```
 
-<blockquote>
-**UNIX TIP**: When you initically run the script with the command above, you may get an error that says "-bash: .../run_kallisto.sh: Permission denied". This is because the script does not have the proper unix permissions to be executed. Type `ls -l ~/week4/scripts/run_kallisto.sh` into the command prompt to see the permissions for the script. A helpful summary about unix permissions can be viewed here: https://drawings.jvns.ca/permissions/. To allow the script to be executable, run the command `chmod +x ~/week4/scripts/run_kallisto.sh`. You can retype the ls -l command to see that this worked, and retry running the script. 
-  It would be efficient to run this script in the 'background' so that you can continue working in your terminal prompt. This can be done with multiple methods such as 'screen' or 'nohup'. When using screen you essentially open a new terminal screen in your current terminal window. To do this type `screen -S kallisto` and you will be in a new screen window. (You can type `pwd` to see where you are.) Now run the script `~/week4/scripts/run_kallisto.sh` and you should see the script running. You can now return to your main terminal window while the script runs in the "background screen", by pressing the keys "control" + "A" + "D" together. Type `screen -ls` to see the screens you have open. In 10 minutes, return to the kallisto screen to check on the progress of your script by typing `screen -r kallisto`.
-</blockquote>
-
 This may take a while to run (~20 minutes). While you are waiting, move on to part 3 to visualize the RNA-seq data, which can be done independently of the `kallisto` run.
 
-## 3. Visualizing data using a genome-browser
+<blockquote>
+**UNIX TIP**: To run your bash scripts as executables, you need to change the access premissions of the file to allow execution. To do so, use the following command:
+  
+  `chmod +x sample.sh `
 
+You can now run your script as an executable: `./sample.sh`.
+Alternatively, you can run a non-executable bash script with `bash sample.sh` command.
+</blockquote>
+
+<blockquote>
+It would be efficient to run this script in the 'background' so that you can continue working in your terminal prompt. This can be done with multiple methods such as 'screen' or 'nohup'. When using screen you essentially open a new terminal screen in your current terminal window. To do this type `screen -S kallisto` and you will be in a new screen window. (You can type `pwd` to see where you are.) Now run the script `~/week4/scripts/run_kallisto.sh` and you should see the script running. You can now return to your main terminal window while the script runs in the "background screen", by pressing the keys "control" + "A" + "D" together. Type `screen -ls` to see the screens you have open. In 10 minutes, return to the kallisto screen to check on the progress of your script by typing `screen -r kallisto`.
+</blockquote>
+
+
+## 4. Visualizing data using a genome-browser
 Now we'd like to visualize these alignments to give help us visually see which genes might be differentially expressed between our samples. We'll do this statistically in section 4.
 
 For genomic DNA sequences, we previously used `samtools tview` to visualize alignments. This is great if we are looking at genetic variation in one sample, but is less helpful for visualizing *multiple samples* and *read abundances*. Today, we'll introduce a **genome browser** called the [Integrative Genomics Viewer](https://igv.org/), or IGV, which is developed by a team right here at UCSD! On Thursday we'll also use some features of a different genome browser run by UCSC. Follow the instructions on the IGV site to install it on your desktop.
@@ -105,7 +113,7 @@ Navigate to a gene. A good one is "chr3:29,939,546-30,023,181" (the gene Mecom).
 **IGV TIP**: To make things easier to visualize, you can color each track. For instance, I found it helpful to make the two replicates of each tissue type a different color. Right click on the name of the track at the left and choose "Change track color".
 </blockquote>
 
-## 4. Comparing overall expression patterns across datasets
+## 5. Comparing overall expression patterns across datasets
 
 First take a look at the `kallisto` output. You should have one directory for each experiment. For example take a look at the directory `FL_Rep1` where you should see the following files:
 * `abundance.tsv`: a tab separated file giving the "TPM" values for each transcript
@@ -129,7 +137,7 @@ In general, to understand how a long command with many steps (such as the above)
 
 Repeat the correlation command for each pairwise analysis of all the 6 `kallisto` results. Present the results as a table or a heatmap. Which tissues were most similar? Most different? How concordant were the replicates? Are replicates more concordant with each other than with other tissues?
 
-## 5. Differential expression analysis
+## 6. Differential expression analysis
 
 Now we'll use [sleuth](https://pachterlab.github.io/sleuth) to identify differentially expressed genes. We'll need to use R for this. To open the R environment, type:
 
