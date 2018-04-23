@@ -136,42 +136,6 @@ In general, to understand how a long command with many steps (such as the above)
 
 Repeat the correlation command for each pairwise analysis of all the 6 `kallisto` results. Present the results as a table or a heatmap. Which tissues were most similar? Most different? How concordant were the replicates? Are replicates more concordant with each other than with other tissues?
 
-## 6. Differential expression analysis
-
-Now we'll use [sleuth](https://pachterlab.github.io/sleuth) to identify differentially expressed genes. We'll need to use R for this. To open the R environment, type:
-
-```
-R
-```
-
-The following code will run sleuth:
-```R
-require("sleuth")
-sample_id = c("FL_Rep1","FL_Rep2","HL_Rep1","HL_Rep2","MB_Rep1","MB_Rep2")
-kal_dirs = file.path(sample_id)
-
-# Load metadata
-s2c = read.table(file.path("exp_info.txt"), header = TRUE, stringsAsFactors=FALSE)
-s2c = dplyr::mutate(s2c, path = kal_dirs)
-
-# Create sleuth object
-so = sleuth_prep(s2c, extra_bootstrap_summary = TRUE)
-
-# Fit each model and test
-so = sleuth_fit(so, ~condition, 'full')
-so = sleuth_fit(so, ~1, 'reduced')
-so = sleuth_lrt(so, 'reduced', 'full')
-
-# Get output, write results to file
-sleuth_table <- sleuth_results(so, 'reduced:full', 'lrt', show_all = FALSE)
-sleuth_significant <- dplyr::filter(sleuth_table, qval <= 0.05)
-write.table(sleuth_significant, "~/week4/sleuth_results.tab", sep="\t", quote=FALSE)
-```
-
-This will output significant hits to `sleuth_results.tab`. How many significant transcripts are there? Include the results in your lab report.
-
-Take a look at the first couple examples. You'll notice the transcript ID is a big confusing number, e.g. "ENSMUST00000061745.4". To see what gene name that corresponds to, you can go to http://uswest.ensembl.org/Mus_musculus/Info/Index and use the search box in the upper right. For several top hits, find the gene name, navigate to that gene in IGV, and take screenshots to include in your lab report. What are the gene names for the top 10 genes? Be sure to include the gene Shh and the surrounding region in your examples. It should be close to the top of your list. We'll examine this locus in more detail on Thursday.
-
 Make sure you save your IGV session before you leave so you can load it when we start up again on Thursday.
 
 **That's it for today! Next time, we'll dig deeper into one of the differentially expressed genes and its regulatory regions. We'll analyze that region across many distantly related species to identify specfic candidate sequences likely to be involved in limb development.**

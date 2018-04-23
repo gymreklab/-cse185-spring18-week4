@@ -9,6 +9,42 @@ today: look at putative enhancers nearby, analyze across species, determine moti
 
 Lot of web tools rather than command line today. learn about resources/where to get data/vis tools. will publish commands we used to get a lot of these datasets for your info
 
+## 6. Differential expression analysis
+
+Now we'll use [sleuth](https://pachterlab.github.io/sleuth) to identify differentially expressed genes. We'll need to use R for this. To open the R environment, type:
+
+```
+R
+```
+
+The following code will run sleuth:
+```R
+require("sleuth")
+sample_id = c("FL_Rep1","FL_Rep2","HL_Rep1","HL_Rep2","MB_Rep1","MB_Rep2")
+kal_dirs = file.path(sample_id)
+
+# Load metadata
+s2c = read.table(file.path("exp_info.txt"), header = TRUE, stringsAsFactors=FALSE)
+s2c = dplyr::mutate(s2c, path = kal_dirs)
+
+# Create sleuth object
+so = sleuth_prep(s2c, extra_bootstrap_summary = TRUE)
+
+# Fit each model and test
+so = sleuth_fit(so, ~condition, 'full')
+so = sleuth_fit(so, ~1, 'reduced')
+so = sleuth_lrt(so, 'reduced', 'full')
+
+# Get output, write results to file
+sleuth_table <- sleuth_results(so, 'reduced:full', 'lrt', show_all = FALSE)
+sleuth_significant <- dplyr::filter(sleuth_table, qval <= 0.05)
+write.table(sleuth_significant, "~/week4/sleuth_results.tab", sep="\t", quote=FALSE)
+```
+
+This will output significant hits to `sleuth_results.tab`. How many significant transcripts are there? Include the results in your lab report.
+
+Take a look at the first couple examples. You'll notice the transcript ID is a big confusing number, e.g. "ENSMUST00000061745.4". To see what gene name that corresponds to, you can go to http://uswest.ensembl.org/Mus_musculus/Info/Index and use the search box in the upper right. For several top hits, find the gene name, navigate to that gene in IGV, and take screenshots to include in your lab report. What are the gene names for the top 10 genes? Be sure to include the gene Shh and the surrounding region in your examples. It should be close to the top of your list. 
+
 ## 7. Loading more info to IGV
 Launch IGV and load the session you started last Tuesday. You should have already 6 tracks: 2 for each RNA-seq replicate of HL, FL, and MB. Additionally the default Refseq genes should be present at the bottom. We will be focusing today on the "Sonic hedgehog" region. In the search bar at the top, navigate to region chr5:28,278,817-29,447,265.
 
@@ -54,18 +90,9 @@ will produce a (not very colorful) html file to visualize the MSA. Play around w
 
 Do you notice any regions that are conserved in all species except snakes? Take a screenshot of those regions.
 
-You should be able to find at least one region that is deleted in all snakes but conserved across all other species. Extract that region plus surrounding sequence (extract ~20-30bp total) from the mouse ZRS sequence.
+You should be able to find at least one region that is deleted in all snakes but conserved across all other species. Based on what we've learned about enhancer regions, hypothesize why this deletion might lead to a loss of legs in snakes. Discuss your hypothesis in your lab report.
 
-## 10. Motif analysis
-You hypothesize that the region deleted in snakes might be forming a binding site for a transcription factor that binds to this enhancer. To find out what might be binding there, we can use the `fimo` tool to scan our sequence for any matching motifs. Make a fasta file `mouse_del_region.fa` with the 20-30bp extracted above and run `fimo` to scan for motifs:
 
-```
-fimo ../../public/week4/motif_databases/MOUSE/HOCOMOCOv11_full_MOUSE_mono_meme_format.meme mouse_del_region.fa
-```
-This file scans for motifs in the HOCOMOCO mouse database in the `public/week4` directory. This will create a folder `fimo_out`. Look at the file `fimo_out/fimo.txt` to find motifs with significant matches.
-
-You will likely have many hits. Probably not all of these transcription factors are actually bound to the DNA at this region. For example, many of the top factors are not even expressed in any of the cell types we analyzed here.  Do you have any hypotheses about which factors are most relevant, or what further experiments or analyses could be done to determine which if any of these factors is relevant? Include this in the discusson of your lab report.
-
-## 11. For your lab report
+## 10. For your lab report
 
 For this week's lab report, there are specific prompts and instructions included in the template document in the `labreports` folder. Each section lists how many points it will be worth, so be sure to complete all the items listed there.

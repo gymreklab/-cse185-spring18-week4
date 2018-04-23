@@ -32,11 +32,9 @@
 * Provide a table of the top matching motifs from part 9.
 
 ## Discussion
-TODO more discussion items
 * Summarize your analysis of the ZRS region and your interpretation of its involvement in determining whether an organism develops limbs or not.
 * We identified the ZRS region based on knowledge from previous literature. Are there other enhancers that appear to be both limb-specific an highly conserved nearby Shh? If you wanted to identify these regions computationally how would you do it?
-* Do you have any hypotheses about which factors are most relevant, or what further experiments or analyses could be done to determine which if any of these factors is relevant?
-
+* Do you have any hypotheses about why the identified mutations might lead to a loss of legs in snakes? What further experiments or analyses could be done to determine the function of this sequence?
 
 ## Citations
 
