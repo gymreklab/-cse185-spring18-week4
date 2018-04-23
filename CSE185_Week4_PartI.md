@@ -3,14 +3,14 @@ Skills covered: Genome browsers and data visualization, RNA-seq analysis
 
 You are interested in determining which genes and regulatory regions are most important for controlling the development of limbs (legs and arms), and whether those regions of the genome might explain why some animals are missing limbs (e.g., most snakes). You decide to first tackle this question by analyzing tissues from mouse early development. 
 
-Today, you will use RNA-sequencing data to perform differential expression analysis.
-On Thursday, you will use additional epigenomics datasets to further analyze a limb-specific enhancer sequence and trace it's evolution across distantly related species.
+Today, you will use RNA-sequencing data to quantify expression levels and learn how to visualize this data using a genome browser.
+On Thursday, you will perform differential expression analysis and use additional epigenomics datasets to further analyze a limb-specific enhancer sequence and trace it's evolution across distantly related species.
 
 You reason that by comparing expression in limb tissues vs. non-limb you can determine genes specific to pathways controlling limb development. You go ahead and collect samples for three tissues from a developing mouse: hind limb (HL), fore limb (FL), and mid-brain (MB). For each tissue, you collect two replicates so you can perform more robust differential expression analysis.
 
 ## 1. Data inspection and quality control
 
-First, remember to remove week1-week3 data if you have completed your lab reports for these weeks. 
+First, remember to remove week1-week3 data if you have completed your lab reports for those weeks. 
 
 As in previous weeks, start by making a clone of your repository on `ieng6`:
 
@@ -35,7 +35,7 @@ First, take a look at the fastq files. **Do not unzip them!** See the UNIX tip b
 Run `fastqc` on the rep1 and rep2 Forelimb, Hindlimb, Midbrain fastq files. You do not need to include the figures in your lab report, although you should keep track of the output `html` files. Comment on anything flagged as problematic in the methods section of your report. See if you can find an explanation in the fastqc help online about whether the flags you see are specific to RNA-seq datasets.
 
 <blockquote>
-**UNIX TIP**: If you feel comfortable to do so, then you can create a shell script (.sh) with an variable parameter as the fastq file name and run the shell script in 'screen' or 'nohup' to run the fastqc processing in parallel for all sets of files.
+**UNIX TIP**: If you feel comfortable to do so, then you can create a shell script (.sh) with a variable parameter as the fastq file name and run the shell script in 'screen' or 'nohup' to run the fastqc processing in parallel for all sets of files. See below for more tips on using `screen`. If you do write any of your own scripts for analyses, be sure to include those in the `scripts/` directory of the Github repository for this week and refer to those in your lab notebook.
 </blockquote>
 
 ## 2. RNA-seq sequence alignment
@@ -58,7 +58,7 @@ to learn how to output the header of a BAM file. Take a look at the [SAM specifi
 Take a look at reads, for instance by doing `samtools view FL_Rep1_chr5.bam`. If you scroll down, you'll notice the CIGAR scores have some extra characters in them we haven't seen before (See week 1 slides for a refresher on CIGAR scores). In the past, we have seen "M" for match, "I" for insertion, and "D" for deletion. Now we see many reads have "N" in the CIGAR scores (e.g. read ID SRR3950230.31710737). In the SAM specification, go to page 6 to read more about CIGAR scores and find out what "N" represents. What biological feature do you think the "N"'s stand for?
 
 <blockquote>
-**UNIX TIP**: `less` is really helpful for looking at and scrolling through files. A helpful way to visualize a sam file is to run `samtools view file.bam | less -S`. The `-S` parameter tells the terminal not to wrap lines, and instead allow you to scroll through long lines horizontally. This makes files with long lines much more readable. Another trick: once you're looking at a file using `less`, you can use `ctrl-v` to scroll down more quickly than using the down button.
+**UNIX TIP**: `less` is really helpful for looking at and scrolling through files. A helpful way to visualize a sam file is to run `samtools view file.bam | less -S`. The `-S` parameter tells the terminal not to wrap lines, and instead allows you to scroll through long lines horizontally. This makes files with long lines much more readable. Another trick: once you're looking at a file using `less`, you can use `ctrl-v` to scroll down more quickly than using the down button.
 </blockquote>
 
 ## 3. Quantifying gene expressiom
@@ -69,7 +69,7 @@ To help you get started running `kallisto`, you should find a bash script `run_k
 
 The top of the script sets variables for things each `kallisto` run will use, inclusing the gene annotation (GTF) file and kallisto index (`mm10_kallisto`). The `for` loop loops through each replicate of each experiment and does a separate `kallisto` job.
 
-Type `kallisto quant` to see a description of each option and the syntax for running. Edit the command to use 100 bootstrap samples so we'll be able to more robustly identify differentially expressed genes (below). Describe any default parameters used in the methods section of your lab report.
+Type `kallisto quant` to see a description of each option and the syntax for running. Edit the command to use 100 bootstrap samples. Describe any default parameters used in the methods section of your lab report.
 
 You can run the script by:
 ```
@@ -83,8 +83,8 @@ This may take a while to run (~20 minutes). While you are waiting, move on to pa
   
   `chmod +x sample.sh `
 
-You can now run your script as an executable: `./sample.sh`.
-Alternatively, you can run a non-executable bash script with `bash sample.sh` command.
+You can now run your script as an executable: `./script.sh`.
+Alternatively, you can run a non-executable bash script with `bash script.sh` command.
 </blockquote>
 
 <blockquote>
@@ -92,21 +92,21 @@ Alternatively, you can run a non-executable bash script with `bash sample.sh` co
 </blockquote>
 
 ## 4. Visualizing data using a genome-browser
-Now we'd like to visualize these alignments to give help us visually see which genes might be differentially expressed between our samples. We'll do this statistically in section 4.
+Now we'd like to visualize these alignments to help us see which genes might be differentially expressed between our samples. We'll do this statistically in section 6.
 
-For genomic DNA sequences, we previously used `samtools tview` to visualize alignments. This is great if we are looking at genetic variation in one sample, but is less helpful for visualizing *multiple samples* and *read abundances*. Today, we'll introduce a **genome browser** called the [Integrative Genomics Viewer](https://igv.org/), or IGV, which is developed by a team right here at UCSD! On Thursday we'll also use some features of a different genome browser run by UCSC. Follow the instructions on the IGV site to install it on your desktop.
+For genomic DNA sequences, we previously used `samtools tview` to visualize alignments. This is great if we are looking at genetic variation in one sample, but is less helpful for visualizing *multiple samples* and *read abundances*. Today, we'll introduce a **genome browser** called the [Integrative Genomics Viewer](https://igv.org/), or IGV. On Thursday we'll also use some features of a different genome browser run by UCSC.
+
+To install IGV, go to http://software.broadinstitute.org/software/igv/download and click "Launch with 750MB". Follow the dialog prompts, which should result in an "IGV" icon being created on your Desktop. Double click the IGV icon to launch the program.
 
 After you launch IGV, you'll need to tell it which reference genome to use. In the top left, choose the genome-build you determined was used above. If you're not sure, ask your TA or friend before moving on since nothing will make sense in IGV if you're not using the right genome build!
 
 Take a moment to orient yourself with IGV. It is basically like a Google Maps for genomes! The top gives the names of each chromosome. The bottom track, labeled "Refseq genes" gives the names and coordinates for all annotated genes. Let's choose one to look at. Type "Nanog" in the search box at the top. This will zoom the view in on this gene. Notice how in the gene you can see the exon and intron structure. The little arrows in the introns point to the right, which means this gene is on the forward strand of the reference. Take a look at another gene (e.g. Sox5) to see a gene on the reverse strand. Drag your mouse over different coordinate windows to zoom in further until you can see actual DNA sequence at the bottom. 
 
-Now we'd like to load our sequence alignments. While IGV can directly visualize BAM files, it is usually easier to visualize "counts" instead in the form of `.tdf` files. These give read counts per position (i.e. coverage) which can give us an idea of the abundance of each gene. `igvtools` was already used to create `.tdf` files for you (from the entire genome, not just chromosome 5) in the `week4` directory. Use `scp` to download these to your desktop so we can load them to IGV. From IGV, select "File->Load from File" and select the 6 tdf files to upload.
+Now we'd like to load our sequence alignments. While IGV can directly visualize BAM files, we'll instead look at "counts" files (".tdf" format) which are much smaller. These give read counts per position (i.e. coverage) which can give us an idea of the abundance of each gene. `igvtools` was already used to create `.tdf` files for you (from the entire genome, not just chromosome 5) in the `week4` directory. From IGV, select "File->Load from File" and select the 6 tdf files from the `public/week4` directory to upload. If you are using your own computer, you'll first need to `scp` the files to your local computer before loading them with IGV.
 
 Navigate to a gene. A good one is "chr3:29,939,546-30,023,181" (the gene Mecom). Note that the RNA-seq tracks have very "spiky" coverage. Some regions have tons of reads and others are flat. Note how that compares to the structure of the gene annotated on the bottom. As expected, the "spikes" correspond to reads from exons, since intron and intergenic sequences generally aren't sequenced in our RNA-seq experiment. Also note how while FL and HL expression is quite high at this gene, MB looks like it has very little coverage in this region, suggesting Mecom is not highly expressed there. Scroll around to some other genes.
 
-<blockquote>
-**IGV TIP**: To avoid having to reload all the files you're visualizing each time you open and close IGV, you can save a "session", which will keep track of all the files, settings, etc. that you were using before. See more information on the IGV website: https://software.broadinstitute.org/software/igv/Sessions. 
-</blockquote>
+To avoid having to reload all the files you're visualizing each time you open and close IGV, you can save a "session", which will keep track of all the files, settings, etc. that you were using before. See more information on the IGV website: https://software.broadinstitute.org/software/igv/Sessions. 
 
 <blockquote>
 **IGV TIP**: To make things easier to visualize, you can color each track. For instance, I found it helpful to make the two replicates of each tissue type a different color. Right click on the name of the track at the left and choose "Change track color".
@@ -130,13 +130,13 @@ Let's break apart this line since it introduces some new commands:
 * `paste`: is a useful command to horizontally concatenate two files. Since each `abundance.tsv` file has genes in the same order, we can `paste` them together to get one big file with results from the replicates side by side.
 * `cut`: is our old friend. It extracts columns 5 and 10 (which contain the two TPM columns after doing `paste`)
 * We use `awk` to filter further. What does the above `awk` command do? When you present the results be sure to mention this step.
-* `datamash` is used to calculate pearson correlation between columns 1 and 2. See `datamash --help` for more info.
+* `datamash` is used to calculate pearson correlation between columns 1 and 2. See `datamash --help` or the [datamash website](https://www.gnu.org/software/datamash/) for more info. This is a really useful tool for quickly calculating statistics about your files on the command line.
 
-In general, to understand how a long command with many steps (such as the above) works, you can try running the command stepwise. For example first, seeing what the output of paste looks like by typing `paste ~/week4/FL_Rep1/abundance.tsv ~/week4/FL_Rep2/abundance.tsv | head` and then adding on each additional step to see what the intermediate outputs are.
+In general, to understand how a long command with many steps (such as the above) works, you can try running the command stepwise. For example first, seeing what the output of paste looks like by typing `paste ~/week4/FL_Rep1/abundance.tsv ~/week4/FL_Rep2/abundance.tsv | head` and then adding on each additional step to see what the intermediate outputs are. Try this with the command above to make sure you understand what each step is doing.
 
 Repeat the correlation command for each pairwise analysis of all the 6 `kallisto` results. Present the results as a table or a heatmap. Which tissues were most similar? Most different? How concordant were the replicates? Are replicates more concordant with each other than with other tissues?
 
 Make sure you save your IGV session before you leave so you can load it when we start up again on Thursday.
 
-**That's it for today! Next time, we'll dig deeper into one of the differentially expressed genes and its regulatory regions. We'll analyze that region across many distantly related species to identify specfic candidate sequences likely to be involved in limb development.**
+**That's it for today! Next time, we'll dig identify differentially expressed genes between the three tissues. We'll analyze regulatory elements for one of the differentially expressed genes to identify specfic candidate sequences likely to be involved in limb development.**
 
