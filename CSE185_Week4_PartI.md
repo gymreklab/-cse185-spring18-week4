@@ -44,7 +44,7 @@ Since we'd like to visualize where our RNA-seq reads are falling in the genome, 
 
 The BAM files containing alignments can be found in the `week4` directory (`*_chr5.bam`).
 
-Unforunately, your labmate forgot to write down some details about how they performed the alignment. In particularly, we'd like to know:
+Unforunately, your labmate forgot to write down some details about how they performed the alignment. Particularly, we'd like to know:
 
 * What program and command did he or she use to align the reads?
 * What reference genome were the sequences aligned to?
@@ -88,9 +88,8 @@ Alternatively, you can run a non-executable bash script with `bash sample.sh` co
 </blockquote>
 
 <blockquote>
-It would be efficient to run this script in the 'background' so that you can continue working in your terminal prompt. This can be done with multiple methods such as 'screen' or 'nohup'. When using screen you essentially open a new terminal screen in your current terminal window. To do this type `screen -S kallisto` and you will be in a new screen window. (You can type `pwd` to see where you are.) Now run the script `~/week4/scripts/run_kallisto.sh` and you should see the script running. You can now return to your main terminal window while the script runs in the "background screen", by pressing the keys "control" + "A" + "D" together. Type `screen -ls` to see the screens you have open. In 10 minutes, return to the kallisto screen to check on the progress of your script by typing `screen -r kallisto`.
+**UNIX TIP**: It would be efficient to run this script in the 'background' so that you can continue working in your terminal prompt. This can be done with multiple methods such as 'screen' or 'nohup'. When using screen you essentially open a new terminal screen in your current terminal window. To do this type `screen -S kallisto` and you will be in a new screen window. (You can type `pwd` to see where you are.) Now run the script `~/week4/scripts/run_kallisto.sh` and you should see the script running. You can now return to your main terminal window while the script runs in the "background screen", by pressing the keys "control" + "A" + "D" together. Type `screen -ls` to see the screens you have open. In 10 minutes, return to the kallisto screen to check on the progress of your script by typing `screen -r kallisto`.
 </blockquote>
-
 
 ## 4. Visualizing data using a genome-browser
 Now we'd like to visualize these alignments to give help us visually see which genes might be differentially expressed between our samples. We'll do this statistically in section 4.
