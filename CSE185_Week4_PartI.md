@@ -10,6 +10,8 @@ You reason that by comparing expression in limb tissues vs. non-limb you can det
 
 ## 1. Data inspection and quality control
 
+First, remember to remove week1-week3 data if you have completed your lab reports for these weeks. 
+
 As in previous weeks, start by making a clone of your repository on `ieng6`:
 
 ```
@@ -20,7 +22,7 @@ Data for this week can be found in the `public/week4` directory. Among other thi
 
 * Forelimb: `FL_Rep1_chr5_*.fq.gz`, `FL_Rep2_chr5_1.fq.gz` 
 * Hindlimb: `HL_Rep1_chr5_*.fq.gz`, `HL_Rep2_chr5_1.fq.gz` 
-* Midbrain: `ML_Rep1_chr5_*.fq.gz`, `ML_Rep2_chr5_1.fq.gz` 
+* Midbrain: `MB_Rep1_chr5_*.fq.gz`, `MB_Rep2_chr5_1.fq.gz` 
 
 (Note: these reads have been downsampled from the original experiment to only contain chromosome 5)
 
@@ -30,7 +32,11 @@ First, take a look at the fastq files. **Do not unzip them!** See the UNIX tip b
 **UNIX TIP**: Using a compression method like `gzip` or `bgzip` can save tons of space when dealing with huge files. Gzipped files aren't directrly human-readable. However, you can use the `zcat` command to write the contents of the file to standard output. For instance, to see the head of a gzipped file, you can do `zcat file.gz | head`. You can similarly pipe the output of `zcat` to other commands like `wc`.
 </blockquote>
 
-Run `fastqc` on the fastq files. You do not need to include the figures in your lab report, although you should keep track of the output `html` files. Comment on anything flagged as problematic in the methods section of your report. See if you can find an explanation in the fastqc help online about whether the flags you see are specific to RNA-seq datasets.
+Run `fastqc` on the rep1 and rep2 Forelimb, Hindlimb, Midbrain fastq files. You do not need to include the figures in your lab report, although you should keep track of the output `html` files. Comment on anything flagged as problematic in the methods section of your report. See if you can find an explanation in the fastqc help online about whether the flags you see are specific to RNA-seq datasets.
+
+<blockquote>
+**UNIX TIP**: If you feel comfortable to do so, then you can create a shell script (.sh) with an variable parameter as the fastq file name and run the shell script in 'screen' or 'nohup' to run the fastqc processing in parallel for all sets of files.
+</blockquote>
 
 ## 2. RNA-seq sequence alignment
 
@@ -67,14 +73,15 @@ Type `kallisto quant` to see a description of each option and the syntax for run
 
 You can run the script by:
 ```
-./run_kallisto.sh 
+~/week4/scripts/run_kallisto.sh 
 ```
 
-This may take a while to run (~20 minutes). While you are waiting, move on to part 3 to visualize the RNA-seq data, which can be done independently of the `kallisto` run.
-
 <blockquote>
-**UNIX TIP**: TODO more on running bash scripts + executable permissions. maybe someone wants to fill this in :)
+**UNIX TIP**: When you initically run the script with the command above, you may get an error that says "-bash: .../run_kallisto.sh: Permission denied". This is because the script does not have the proper unix permissions to be executed. Type `ls -l ~/week4/scripts/run_kallisto.sh` into the command prompt to see the permissions for the script. A helpful summary about unix permissions can be viewed here: https://drawings.jvns.ca/permissions/. To allow the script to be executable, run the command `chmod +x ~/week4/scripts/run_kallisto.sh`. You can retype the ls -l command to see that this worked, and retry running the script. 
+  It would be efficient to run this script in the 'background' so that you can continue working in your terminal prompt. This can be done with multiple methods such as 'screen' or 'nohup'. When using screen you essentially open a new terminal screen in your current terminal window. To do this type `screen -S kallisto` and you will be in a new screen window. (You can type `pwd` to see where you are.) Now run the script `~/week4/scripts/run_kallisto.sh` and you should see the script running. You can now return to your main terminal window while the script runs in the "background screen", by pressing the keys "control" + "A" + "D" together. Type `screen -ls` to see the screens you have open. In 10 minutes, return to the kallisto screen to check on the progress of your script by typing `screen -r kallisto`.
 </blockquote>
+
+This may take a while to run (~20 minutes). While you are waiting, move on to part 3 to visualize the RNA-seq data, which can be done independently of the `kallisto` run.
 
 ## 3. Visualizing data using a genome-browser
 
@@ -91,7 +98,7 @@ Now we'd like to load our sequence alignments. While IGV can directly visualize 
 Navigate to a gene. A good one is "chr3:29,939,546-30,023,181" (the gene Mecom). Note that the RNA-seq tracks have very "spiky" coverage. Some regions have tons of reads and others are flat. Note how that compares to the structure of the gene annotated on the bottom. As expected, the "spikes" correspond to reads from exons, since intron and intergenic sequences generally aren't sequenced in our RNA-seq experiment. Also note how while FL and HL expression is quite high at this gene, MB looks like it has very little coverage in this region, suggesting Mecom is not highly expressed there. Scroll around to some other genes.
 
 <blockquote>
-**IGV TIP**: To avoid having to reload all the files you're visualizing each time you open and close IGV, you can save a "session", which will keep track of all the files, settings, etc. that you were using before. Go to 
+**IGV TIP**: To avoid having to reload all the files you're visualizing each time you open and close IGV, you can save a "session", which will keep track of all the files, settings, etc. that you were using before. See more information on the IGV website: https://software.broadinstitute.org/software/igv/Sessions. 
 </blockquote>
 
 <blockquote>
@@ -109,16 +116,18 @@ We'd like to do some sanity checks on our data. In general, we'd like to see how
 
 Run the following command to compute the Pearson correlation between the TPM values in both replicates of FL:
 ```
-paste FL_Rep1/abundance.tsv FL_Rep2/abundance.tsv | cut -f 5,10 | grep -v tpm | awk '(!($1==0 && $2==0))' | datamash ppearson 1:2
+paste ~/week4/FL_Rep1/abundance.tsv ~/week4/FL_Rep2/abundance.tsv | cut -f 5,10 | grep -v tpm | awk '(!($1==0 && $2==0))' | datamash ppearson 1:2
 ```
 
 Let's break apart this line since it introduces some new commands:
 * `paste`: is a useful command to horizontally concatenate two files. Since each `abundance.tsv` file has genes in the same order, we can `paste` them together to get one big file with results from the replicates side by side.
 * `cut`: is our old friend. It extracts columns 5 and 10 (which contain the two TPM columns after doing `paste`)
 * We use `awk` to filter further. What does the above `awk` command do? When you present the results be sure to mention this step.
-* `datamash` is used to calculate correlation between columns 1 and 2. See `datamash --help` for more info.
+* `datamash` is used to calculate pearson correlation between columns 1 and 2. See `datamash --help` for more info.
 
-Repeat this for each pairwise analysis of all the 6 `kallisto` results. Present the results as a table or a heatmap. Which tissues were most similar? Most different? How concordant were the replicates? Are replicates more concordant with each other than with other tissues?
+In general, to understand how a long command with many steps (such as the above) works, you can try running the command stepwise. For example first, seeing what the output of paste looks like by typing `paste ~/week4/FL_Rep1/abundance.tsv ~/week4/FL_Rep2/abundance.tsv | head` and then adding on each additional step to see what the intermediate outputs are.
+
+Repeat the correlation command for each pairwise analysis of all the 6 `kallisto` results. Present the results as a table or a heatmap. Which tissues were most similar? Most different? How concordant were the replicates? Are replicates more concordant with each other than with other tissues?
 
 ## 5. Differential expression analysis
 
@@ -130,7 +139,7 @@ R
 
 The following code will run sleuth:
 ```R
-library("sleuth")
+require("sleuth")
 sample_id = c("FL_Rep1","FL_Rep2","HL_Rep1","HL_Rep2","MB_Rep1","MB_Rep2")
 kal_dirs = file.path(sample_id)
 
@@ -149,7 +158,7 @@ so = sleuth_lrt(so, 'reduced', 'full')
 # Get output, write results to file
 sleuth_table <- sleuth_results(so, 'reduced:full', 'lrt', show_all = FALSE)
 sleuth_significant <- dplyr::filter(sleuth_table, qval <= 0.05)
-write.table(sleuth_significant, "sleuth_results.tab", sep="\t", quote=FALSE)
+write.table(sleuth_significant, "~/week4/sleuth_results.tab", sep="\t", quote=FALSE)
 ```
 
 This will output significant hits to `sleuth_results.tab`. How many significant transcripts are there? Include the results in your lab report.
