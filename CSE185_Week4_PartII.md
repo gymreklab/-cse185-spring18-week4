@@ -3,26 +3,30 @@ Skills covered: Data visualization and genome browsers, accessing public databas
 
 For the first half of the lab today, we'll continue where we left off analyzing expression from different tissues of a developing mouse to identify differentially expressed genes.
 
-We'll then zoom in on one differentially expressed gene, "Sonic Hedgehog" (Shh)[https://en.wikipedia.org/wiki/Sonic_hedgehog]. This gene is famous for its role in early development. Depending on its concentration in different parts of a developing embryo, it can determine whether cells turn into different structures such as digits, limbs, or brain tissue.
+We'll then zoom in on one differentially expressed gene, "Sonic Hedgehog" [Shh](https://en.wikipedia.org/wiki/Sonic_hedgehog). This gene is famous for its role in early development. Depending on its concentration in different parts of a developing embryo, it can determine whether cells turn into different structures such as digits, limbs, or brain tissue.
 
 Shh expression is controlled by a neaby enhancer known as the ZRS (Zone of polarizing activity regulatory sequence), which is specific to limb tissues. Intriguingly, mutations in this enhancer in humans have been shown to cause limb malformations. In the second part of the lab today, we'll take a closer look at the ZRS region in mouse, then compare the sequence at this region to other species with and without limbs.
 
 ## 6. Differential expression analysis
 
-Now we'll use [sleuth](https://pachterlab.github.io/sleuth) to identify differentially expressed genes. We'll need to use R for this. To open the R environment, type:
+First we'll use [sleuth](https://pachterlab.github.io/sleuth) to identify differentially expressed genes. `sleuth` is designed to work directly with the output of `kallisto`, which we ran on Tuesday.
+
+We'll need to use R for this. To open the R environment, type:
 
 ```
 R
 ```
 
-The following code will run sleuth:
+The following code will run sleuth. Since we don't require previous experience with `R` for the course, we have gone ahead and written these commands for you. However you are encouraged to take a look at the [Sleuth tutorial](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html) to learn more about each of these commands.
 ```R
-require("sleuth")
+library("sleuth")
+
+# Set up the paths to our kallisto results
 sample_id = c("FL_Rep1","FL_Rep2","HL_Rep1","HL_Rep2","MB_Rep1","MB_Rep2")
 kal_dirs = file.path(sample_id)
 
 # Load metadata
-s2c = read.table(file.path("exp_info.txt"), header = TRUE, stringsAsFactors=FALSE)
+s2c = read.table(file.path("/home/linux/ieng6/cs185s/public/week4/exp_info.txt"), header = TRUE, stringsAsFactors=FALSE)
 s2c = dplyr::mutate(s2c, path = kal_dirs)
 
 # Create sleuth object
