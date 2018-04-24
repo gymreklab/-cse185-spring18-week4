@@ -10,12 +10,12 @@
 ### RNA-seq analysis
 * Describe the datasets you're working with. How many reads were in each RNA-seq experiment? What read lengths?
 * Describe and interpret anything flagged by `fastqc`.
-* What alignment method and reference genome were used?
+* What alignment method and reference genome were used? Include what genome build was used, which is important for enabling other people to reproduce your analysis.
 * Describe how you used kallisto to quantify transcripts. What non-default parameters did you use and why?
-* Describe how you used sleuth to identify differentially expressed transcripts.
+* Describe how you used sleuth to identify differentially expressed transcripts. What False Discovery Rate (q-value) threshold did you use?
 
 ### ChIP-seq and other epigenomic analyses
-* Describe the datasets you visualized on IGV. Include what genome build was used, which is important for enabling other people to reproduce your analysis.
+* Describe the datasets you visualized on IGV. 
 * What tools did you use for the multiple sequence alignment and visualization? Mention any non-default parameters.
 * What tool and database did you use for motif identification.
 
