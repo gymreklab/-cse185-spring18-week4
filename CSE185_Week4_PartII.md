@@ -54,11 +54,11 @@ Visualize expression of differntially expressed genes as a heatmap (e.g. with tr
 Perform gene ontology (GO) analysis or gene-set enrichment analysis (GSEA) on the top set of genes. There are many online tools for doing this (e.g. [DAVID](https://david.ncifcrf.gov/), [Panther](http://pantherdb.org/)). What types of biological processes are enriched in differentially expressed genes? Inlude a table in your results section.
 
 ## 7. Loading more info to IGV
-Launch IGV and load the session you started last Tuesday. You should have already 6 tracks: 2 for each RNA-seq replicate of HL, FL, and MB. Additionally the default Refseq genes should be present at the bottom. We will be focusing today on the "Sonic hedgehog" region. In the search bar at the top, navigate to region chr5:28,278,817-29,447,265.
+Launch IGV and load the session you started last Tuesday. You should have already 6 tracks: 2 for each RNA-seq replicate of HL, FL, and MB. Additionally the default Refseq genes should be present at the bottom. We will be focusing today on the Shh region. In the search bar at the top, navigate to region chr5:28,278,817-29,447,265.
 
 We'd like to identify potential regulatory regions for the differentially expressed gene *Shh*. Our labmates have generated some ChIP-sequencing data that will be useful for identifying putative enhancers in this region. We'll start by adding the ChIP-seq datasets and some additional tracks to IGV to help us interpret some features of this region.
 
-In the `public/week4` directory, you'll find (bedGraph)[https://genome.ucsc.edu/FAQ/FAQformat.html#format1.8] files (`*.bedGraph`) for ChIP-sequencing experiments for H3K27ac and H3K4me1 (marks found near enhancer regions). Use `scp` to copy these to your desktop and load the files to IGV. Note these have been restricted to have data in our region of interest, so you if you scroll outside this region you won't see any data.
+In the `public/week4` directory, you'll find (bedGraph)[https://genome.ucsc.edu/FAQ/FAQformat.html#format1.8] files (`*.bedGraph`) for ChIP-sequencing experiments for H3K27ac and H3K4me1 (histone modifications found near enhancer regions). Load the files to IGV. Note these have been restricted to have data in our region of interest, so you if you scroll outside this region you won't see any data.
 
 First take a look at where these marks (H3K27ac and H3K4me1) are falling. Are they near gene regions? Beginning or ends of genes? Other places? Discuss this in the results section of your lab report.
 
@@ -76,7 +76,7 @@ After you click "get output" make sure "DATA VALUE" is selected on the next page
 
 It's worth taking a second to go back to the table browser and see what kinds of info can be downloaded from here. It is a really flexible tool for a huge number of published genome-wide data tracks!
 
-Now go back to IGV and load the PhyloP file. What regions seem to have highest PhyloP scores? Are there any highly conserved regions that are not protein-coding? Hypothesize what those might correspond to. Include a brief description of what you observe in your lab report.
+Now go back to IGV and load the PhyloP file. What regions seem to have highest PhyloP scores? Are there any highly conserved regions that are not protein-coding (i.e. in exons)? Hypothesize what those might correspond to. Include a brief description of what you observe in your lab report.
 
 ## 8. Zooming in on ZRS
 
