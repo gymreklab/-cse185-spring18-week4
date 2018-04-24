@@ -138,5 +138,5 @@ Repeat the correlation command for each pairwise analysis of all the 6 `kallisto
 
 Make sure you save your IGV session before you leave so you can load it when we start up again on Thursday.
 
-**That's it for today! Next time, we'll dig identify differentially expressed genes between the three tissues. We'll analyze regulatory elements for one of the differentially expressed genes to identify specfic candidate sequences likely to be involved in limb development.**
+**That's it for today! Next time, we'll identify differentially expressed genes between the three tissues. We'll analyze regulatory elements for one of the differentially expressed genes to find specfic candidate sequences likely to be involved in limb development.**
 
