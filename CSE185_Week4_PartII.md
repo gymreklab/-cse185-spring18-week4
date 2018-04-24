@@ -1,13 +1,11 @@
 # Week 4: Why don't snakes have legs? (Part 2)
-Skills covered: Epigenomics, accessing public databases, multiple sequence alignment, motif analysis
+Skills covered: Data visualization and genome browsers, accessing public databases, epigenomics, multiple sequence alignment
 
-TODO intro:
-zoom in on Shh, should have been 2nd hit from analysis last time
-analyze well known enhancer region ZRS
-human disease, limb develpoment
-today: look at putative enhancers nearby, analyze across species, determine motif/mechanism
+For the first half of the lab today, we'll continue where we left off analyzing expression from different tissues of a developing mouse to identify differentially expressed genes.
 
-Lot of web tools rather than command line today. learn about resources/where to get data/vis tools. will publish commands we used to get a lot of these datasets for your info
+We'll then zoom in on one differentially expressed gene, "Sonic Hedgehog" (Shh)[https://en.wikipedia.org/wiki/Sonic_hedgehog]. This gene is famous for its role in early development. Depending on its concentration in different parts of a developing embryo, it can determine whether cells turn into different structures such as digits, limbs, or brain tissue.
+
+Shh expression is controlled by a neaby enhancer known as the ZRS (Zone of polarizing activity regulatory sequence), which is specific to limb tissues. Intriguingly, mutations in this enhancer in humans have been shown to cause limb malformations. In the second part of the lab today, we'll take a closer look at the ZRS region in mouse, then compare the sequence at this region to other species with and without limbs.
 
 ## 6. Differential expression analysis
 
