@@ -47,10 +47,10 @@ This will output significant hits to `sleuth_results.tab`. How many significant 
 
 Take a look at the first couple examples. You'll notice the transcript ID is a big confusing number, e.g. "ENSMUST00000061745.4". To see what gene name that corresponds to, you can go to http://uswest.ensembl.org/Mus_musculus/Info/Index and use the search box in the upper right. For several top hits, find the gene name, navigate to that gene in IGV, and take screenshots to include in your lab report. What are the gene names for the top 10 genes? Be sure to include the gene Shh and the surrounding region in your examples. It should be close to the top of your list. 
 
-** Optional extra credit (1 point) **
+**Optional extra credit (1 point)**
 Visualize expression of differntially expressed genes as a heatmap (e.g. with transcripts as rows and samples as columns). Cluster the rows by row and column. Do replicates cluster together? Are there clear clusters of up vs. down regulated genes in each tissue?
 
-** Optional extra credit (1 point) **
+**Optional extra credit (1 point)**
 Perform gene ontology (GO) analysis or gene-set enrichment analysis (GSEA) on the top set of genes. There are many online tools for doing this (e.g. [DAVID](https://david.ncifcrf.gov/), [Panther](http://pantherdb.org/)). What types of biological processes are enriched in differentially expressed genes? Inlude a table in your results section.
 
 ## 7. Loading more info to IGV
