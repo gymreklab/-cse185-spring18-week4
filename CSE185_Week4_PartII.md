@@ -40,6 +40,8 @@ so = sleuth_lrt(so, 'reduced', 'full')
 # Get output, write results to file
 sleuth_table <- sleuth_results(so, 'reduced:full', 'lrt', show_all = FALSE)
 sleuth_significant <- dplyr::filter(sleuth_table, qval <= 0.05)
+# Note, you may need to edit the output path below if your $HOME
+# directory is not the same as your CSE185 course directory
 write.table(sleuth_significant, "~/week4/sleuth_results.tab", sep="\t", quote=FALSE)
 ```
 
